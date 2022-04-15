@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+<div class='container'>
+<h1> {{user}}'s INDEX</h1>
+<hr>
+<div>
+    <a href=" {% url 'movies:create' %}" class='btn btn-outline-success'>새글</a>
+</div>
+<hr>
+{% for movie in movies %}
+<li><a href=" {% url 'movies:detail' movie.pk %}">{{ movie.title }}</a></li>
+
+{% endfor %}
+</div>
+{% endblock content %}
+

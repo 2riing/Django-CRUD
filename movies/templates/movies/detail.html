@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+{% block content %}
+    <div class='container'>
+    <h1>{{movie.title}}</h1>
+    <div class = 'card'>
+        <div class='card-body'>
+        <div class='font-weight-bold'>[{{movie.user.username}}] </div>
+        <hr>
+        <p> {{movie.description | linebreaksbr}}</p>
+        </div>
+    </div>
+    {% if request.user == movie.user %}
+    <hr>
+    <div >
+        <a href=" {% url 'movies:update' movie.pk %}" class='btn btn-outline-primary'>글수정</a>
+        <form action=" {% url 'movies:delete' movie.pk %}" method = 'POST' class='d-inline'> 
+            {% csrf_token %}
+            <button class='btn btn-outline-danger '>글삭제</button>
+        </form>
+        <a href=" {% url 'movies:index' %}" class='btn btn-outline-secondary'>뒤로가기</a>
+    </div>
+    {% endif %}
+
+    <form action=" {% url 'movies:comments_create' movie.pk%}" method='POST'>
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button class='btn btn-outline-secondary'>댓글달기</button>
+    </form>
+
+    {% for comment in movie.comment_set.all %}
+
+        <div class="border p-3 m-2">
+        <div class='font-weight-bold'>{{comment.pk}}번째 comment,  {{ comment.user.username }} </div>
+        <div> : {{comment.content}}</div>
+        </div>
+        {% if request.user == comment.user %}
+        <form action=" {% url 'movies:comments_delete' movie.pk comment.pk %}" method='POST'>
+            {% csrf_token %}
+            <button class='btn btn-outline-none btn-sm'>------ 댓삭하기❌ ------</button>
+        </form>
+        {% endif %}
+    {% endfor %}
+   
+
+
+    </div>
+{% endblock content %}
+
